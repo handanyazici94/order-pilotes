@@ -38,7 +38,6 @@ public class OrderController {
         return ResponseEntity.ok(orderResponse);
     }
 
-    // click update button
     @PutMapping("/client/{clientId}/order/{orderId}")
     ResponseEntity updateOrder(@PathVariable("orderId") Long orderId, @PathVariable("clientId") Long clientId, @Valid @RequestBody OrderDto orderDto) throws ApiException {
         log.info("Update Order. OrderId: " + orderId + " ClientId: " + clientId);
@@ -47,7 +46,6 @@ public class OrderController {
         return ResponseEntity.ok(orderResponse);
     }
 
-    // send some words
     @GetMapping("/search/{partial}")
     ResponseEntity searchOrderByClient(@PathVariable("partial") String partialSearch) throws ApiException {
         log.info("Search order as partial By Chef.");

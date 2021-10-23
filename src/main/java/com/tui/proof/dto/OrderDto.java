@@ -3,18 +3,18 @@ package com.tui.proof.dto;
 import lombok.Data;
 
 import javax.validation.Valid;
-import javax.validation.constraints.Max;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
-import java.time.Instant;
 
 @Data
 public class OrderDto {
 
-    //@Max(15)
-    //@Pattern(regexp = "^[1-9]|1[0-5]\\d*[05]$" , message = "invalid.amount")
+    @Pattern(regexp = "^|5|10|15$" , message = "Enter just 5,10 or 15 number of pilotes")
+    @NotEmpty
     private String pilotes;
+
+    @NotNull
     private double orderTotal;
 
     @Valid

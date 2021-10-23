@@ -2,6 +2,7 @@ package com.tui.proof.ws.controller;
 
 import com.tui.proof.dto.ClientDto;
 import com.tui.proof.dto.ClientResponse;
+import com.tui.proof.exception.ApiException;
 import com.tui.proof.model.entity.Client;
 import com.tui.proof.service.ClientService;
 import lombok.extern.log4j.Log4j2;
@@ -23,7 +24,7 @@ public class ClientController {
     ClientService clientService;
 
     @PostMapping("/register")
-    ResponseEntity register(@Valid @RequestBody ClientDto clientDto) {
+    ResponseEntity register(@Valid @RequestBody ClientDto clientDto) throws ApiException {
 
         ClientResponse clientResponse = clientService.register(clientDto);
         return ResponseEntity.ok(clientResponse);

@@ -15,8 +15,4 @@ public class AddressService {
     public Address findAddressById (Long addressId) throws ApiException {
         return addressRepository.findById(addressId).orElseThrow(()-> new ApiException("Address is not found"));
     }
-
-    public Address saveAddress (Address address) {
-        return addressRepository.save(address);
-    }
 }

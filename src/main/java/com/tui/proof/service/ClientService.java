@@ -9,6 +9,8 @@ import com.tui.proof.service.mapper.ClientMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.Optional;
+
 
 @Service
 public class ClientService {
@@ -16,24 +18,25 @@ public class ClientService {
     @Autowired
     ClientRepository clientRepository;
 
-    public ClientResponse register (ClientDto clientDto) {
-        Client registeredClient = clientRepository.findByEmail(clientDto.getEmail())
-        .map(client -> {
-             new ApiException("User already exists");
-             return client;
-        }).orElseGet(()-> {
-            Client client = ClientMapper.mappingFromClientDtoToClient(clientDto);
-            return clientRepository.save(client);
-        });
-        return ClientMapper.mappingFromClientToClientResponse(registeredClient);
+    public ClientResponse register (ClientDto clientDto) throws ApiException {
+
+        Optional<Client> client = clientRepository.findByEmail(clientDto.getEmail());
+        if (client.isPresent()) {
+            throw new ApiException("User already exists");
+        }
+        Client newClient = ClientMapper.mappingFromClientDtoToClient(clientDto);
+        newClient = clientRepository.save(newClient);
+
+        return ClientMapper.mappingFromClientToClientResponse(newClient);
     }
+
     public Client findClientById (Long clientId) throws ApiException {
         return clientRepository.findById(clientId).orElseThrow(()-> new ApiException("Client is not found"));
     }
 
-    public Client checkClientExists(Long clientId, Long orderId) throws ApiException{
+    public Client findClientOfTheOrderExists(Long clientId, Long orderId) throws ApiException{
         return clientRepository.findByIdAndOrdersId(clientId, orderId)
-            .orElseThrow(()-> new ApiException("Client is not found"));
+            .orElseThrow(()-> new ApiException("Client or order is not found"));
     }
 
 }

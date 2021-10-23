@@ -1,6 +1,7 @@
 package com.tui.proof.config;
 
 import com.tui.proof.model.enm.Role;
+import com.tui.proof.service.UserPrincipalDetailsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
@@ -21,12 +22,10 @@ import javax.sql.DataSource;
 @EnableWebSecurity
 public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
 
-    @Qualifier("userService")
+   // @Qualifier("userService")
     @Autowired
-    private UserDetailsService userDetailsService;
-
-    @Autowired
-    private PasswordEncoder passwordEncoder;
+    private UserPrincipalDetailsService userPrincipalDetailsService;
+   // private UserDetailsService userDetailsService;
 
     @Autowired
     private DataSource dataSource;
@@ -39,8 +38,8 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
     @Bean
     public DaoAuthenticationProvider authenticationProvider(){
         DaoAuthenticationProvider provider = new DaoAuthenticationProvider();
-        provider.setPasswordEncoder(passwordEncoder);
-        provider.setUserDetailsService(userDetailsService);
+        provider.setPasswordEncoder(passwordEncoder());
+        provider.setUserDetailsService(userPrincipalDetailsService);
 
         return provider;
     }
@@ -48,7 +47,7 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
-        auth.userDetailsService(userDetailsService).passwordEncoder(passwordEncoder()).and()
+        auth.userDetailsService(userPrincipalDetailsService).passwordEncoder(passwordEncoder()).and()
                 .authenticationProvider(authenticationProvider())
                 .jdbcAuthentication()
                 .dataSource(dataSource);
@@ -75,8 +74,7 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers(HttpMethod.POST, "/api/v1/order/**").permitAll()
                 .antMatchers(HttpMethod.PUT, "/api/v1/order/**").permitAll()
                 .antMatchers(HttpMethod.GET, "/api/v1/order/**").hasRole(Role.ADMIN.toString())
-                //.anyRequest().authenticated()
-            .and().csrf().ignoringAntMatchers("/h2-console/**")
+                .and().csrf().ignoringAntMatchers("/h2-console/**")
             .and().headers().frameOptions().sameOrigin()
             .and()
             .csrf().disable()

@@ -1,0 +1,24 @@
+version: '3.1'
+services:
+  rabbitmq:
+    image: rabbitmq:management
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+    environment:
+      - RABBITMQ_DEFAULT_USER=guest
+      - RABBITMQ_DEFAULT_PASS=guest
+  spring-boot-backend-technical:
+    build:
+      context: ./
+      dockerfile: Dockerfile
+    image: spring-boot-backend-technical:latest
+    volumes:
+      - /data/spring-boot-backend-technical
+    restart: always
+    ports:
+      - 8080:8080
+    environment:
+      - SPRING_RABBITMQ_HOST=rabbitmq
+    depends_on:
+      - rabbitmq

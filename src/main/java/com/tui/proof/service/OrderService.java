@@ -8,6 +8,7 @@ import com.tui.proof.model.entity.Client;
 import com.tui.proof.model.entity.Order;
 import com.tui.proof.model.rabbitMq.OrderNotification;
 import com.tui.proof.model.rabbitMq.OrderNotificationStatus;
+import com.tui.proof.repository.AddressRepository;
 import com.tui.proof.repository.OrderRepository;
 import com.tui.proof.service.mapper.AddressMapper;
 import com.tui.proof.service.mapper.OrderMapper;
@@ -30,6 +31,9 @@ public class OrderService {
     AddressService addressService;
 
     @Autowired
+    AddressRepository addressRepository;
+
+    @Autowired
     OrderRepository orderRepository;
 
     @Autowired
@@ -37,12 +41,12 @@ public class OrderService {
 
 
     public OrderResponse createNewOrder (OrderDto orderDto, Long clientId) throws ApiException {
-
         Client client = clientService.findClientById(clientId);
         Address address = AddressMapper.mappingAddressDtoToAddress(orderDto.getAddress());
-        addressService.saveAddress(address);
+        address = addressRepository.save(address);
         Order order = OrderMapper.mappingFromOrderDtoToOrder(orderDto, client, address);
-        this.saveOrder(order);
+        order = orderRepository.save(order);
+
         OrderNotification orderNotification = OrderMapper.mappingFromOrderToOrderNotification(order, address, client, OrderNotificationStatus.PROCESS);
         rabbitMqProducer.sendOrder(orderNotification);
 
@@ -50,15 +54,16 @@ public class OrderService {
     }
 
     public OrderResponse updateOrder (Long orderId, Long clientId, OrderDto orderDto) throws ApiException {
-        Client client = clientService.checkClientExists(clientId, orderId);
+        Client client = clientService.findClientOfTheOrderExists(clientId, orderId);
         Instant limitTime = Instant.now().minus(VALIDITY_TIME, ChronoUnit.MINUTES);
+        //this.findOrderById(orderId);
         Order updateOrder = this.findOrderThatProcessTimeGreaterThanLimitTime(orderId, limitTime);
 
         Address address = AddressMapper.mappingFromAddressDtoToExistAddress(orderDto.getAddress(), updateOrder.getDeliveryAddress());
         updateOrder.setPilotes(Integer.parseInt(orderDto.getPilotes()));
         updateOrder.setOrderTotal(orderDto.getOrderTotal());
         updateOrder.setDeliveryAddress(address);
-        orderRepository.save(updateOrder);
+        updateOrder = orderRepository.save(updateOrder);
 
         OrderNotification orderNotification = OrderMapper.mappingFromOrderToOrderNotification(updateOrder, address, client, OrderNotificationStatus.UPDATE);
         rabbitMqProducer.sendOrder(orderNotification);
@@ -72,11 +77,7 @@ public class OrderService {
     }
 
     public Order findOrderById (Long orderId) throws ApiException {
-        return orderRepository.findById(orderId).orElseThrow(()-> new ApiException("Order is not found"));
-    }
-
-    public Order saveOrder (Order order) {
-        return orderRepository.save(order);
+        return orderRepository.findById(orderId).orElseThrow(()-> new ApiException("The order could not be found."));
     }
 
     public List<OrderResponse> listAllOrder () {

@@ -1,4 +1,4 @@
-package com.tui.proof.ws.controller;
+package com.tui.proof.exception.handler;
 
 import com.tui.proof.exception.ApiException;
 import org.springframework.http.HttpHeaders;
@@ -36,7 +36,6 @@ public class ExceptionHandlingController {
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ExceptionHandler(ApiException.class)
     public ResponseEntity handleCustomExceptionApiException(ApiException ex) {
-        System.out.println("Handle APi Exception **** ");
         return ResponseEntity.ok(ex.getMessage());
     }
 }
