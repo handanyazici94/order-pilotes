@@ -27,6 +27,8 @@ mvn clean package
 ```
 docker-compose up -d 
 ```
+Now, REST API is running, you can make a request.
+### Stop Docker Container
 ###### Stop the containers :
 ```
 docker-compose stop 
@@ -57,9 +59,11 @@ http://localhost:8080/api/v1/h2-console
 ```
 
 ##### RabbitMQ:
-###### You can see create and update order notifications in Queues tab
+###### You can see create and update order notifications in Queues tab.
 ```
 http://localhost:15672
+username: guest
+password: guest
 ```
 
 ### REST API ENDPOINT
