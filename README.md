@@ -2,16 +2,10 @@
 
 ## Summary
 TUI DX Backend technical Test v2.
-This project is a Spring Boot project with maven package management. This REST API was developed
-to order using H2 local database management and Java 11. Firstly, client has to register the system. 
-After that, client can order pilotes. After receiving the order from client, the order is notificated to rabbitmq message broker service.
-Also, the client has chance to update the order in 5 minutes. But If the time is over, the client could not change the order.
-Secondly, When the project build, a user that has role 'ADMIN' is created. This user has some other advantages.
-Admin user can search and list the order with basic authentication.Searching the order is working as partial search. 
-Admin can search writing client's first name and last name. The admin can also search orders by city, country, post code, street,phone number and email.
-Finally, you must run the project using docker-compose.yml file.
-This file will have a configuration to create a RabbitMq message broker service in a Docker container and 
-connect it to the container of the Spring Boot project to run as a multi-container application.
+This project is a Spring Boot project with maven package management. This REST API was developed to order using H2 local database management and Java 11.<br />
+Firstly, client has to register the system. After that, client can order pilotes. After receiving the order from client, the order is notificated to rabbitmq message broker service. Also, the client has chance to update the order in 5 minutes. But If the time is over, the client could not change the order. <br />
+Secondly, When the project is builded, a user that has role 'ADMIN' is created. This user has some other advantages. Admin user can search and list the order with basic authentication.Searching the order is working as partial search. Admin can search writing client's first name and last name. The admin can also search orders by city, country, post code, street,phone number and email.<br />
+Finally, you must run the project using docker-compose.yml file. This file will have a configuration to create a RabbitMq message broker service in a Docker container and connect it to the container of the Spring Boot project to run as a multi-container application.<br />
 
 
 ### Prerequisites
@@ -27,7 +21,7 @@ docker-compose.yml file is responsible for running rabbitmq and spring boot proj
 
 ###### Create .jar file under the target file, Also, you can see Test results: 
 ```
-maven clean package
+mvn clean package
 ```
 ###### Create images and containers and run the project as detached mode:
 ```
@@ -76,6 +70,8 @@ PUT  /client/{clientId}/order/{orderId}
 GET  /order/{partial}
 GET  /orders
 ```
+<br />
+You can import postman file named TUI.postman_collection.json that is located in the project.
 
 
 

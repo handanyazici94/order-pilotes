@@ -1,0 +1,107 @@
+{
+	"info": {
+		"_postman_id": "6dad4a24-1605-4b0d-9547-f519f7e522d2",
+		"name": "TUI",
+		"schema": "https://schema.getpostman.com/json/collection/v2.0.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Create Order",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \n    \"pilotes\": 15,\n    \"orderTotal\": \"36.7\",\n    \"address\": {\n        \"street\": \"dfsdfsd\",\n        \"postcode\": \"04563\",\n        \"city\": \"çankırı\",\n        \"country\": \"turkey\"\n    }\n\n    \n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": "http://localhost:8080/api/v1/client/3456/order"
+			},
+			"response": []
+		},
+		{
+			"name": "Search Order",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"auth": {
+					"type": "basic",
+					"basic": {
+						"password": "admin",
+						"username": "admin"
+					}
+				},
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": "http://localhost:8080/api/v1/order/gebze cad"
+			},
+			"response": []
+		},
+		{
+			"name": "Update Order",
+			"request": {
+				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"pilotes\": 5,\n    \"orderTotal\": \"12.9\",\n    \"address\": {\n        \"street\": \"gebze cad 34. sokak\",\n        \"postcode\": \"04616\",\n        \"city\": \"izmit\",\n        \"country\": \"turkey\"\n    }\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": "http://localhost:8080/api/v1/client/3456/order/4"
+			},
+			"response": []
+		},
+		{
+			"name": "List Order",
+			"request": {
+				"auth": {
+					"type": "basic",
+					"basic": {
+						"username": "ret",
+						"password": "admin5thrth"
+					}
+				},
+				"method": "GET",
+				"header": [],
+				"url": "http://localhost:8080/api/v1/orders"
+			},
+			"response": []
+		},
+		{
+			"name": "Create Client",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"firstName\": \"İbrahim\",\n    \"lastName\": \"Yaycı\",\n    \"telephone\": \"05324563243\",\n    \"email\": \"vhvj@gmail.com\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": "http://localhost:8080/api/v1/client"
+			},
+			"response": []
+		}
+	]
+}
