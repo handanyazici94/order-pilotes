@@ -101,6 +101,6 @@ public class ClientServiceTest {
             clientService.findClientById(clientId);
         });
 
-        assertEquals("Client is not found", actualException.getMessage());
+        assertEquals("Client couldn't be found", actualException.getMessage());
     }
 }

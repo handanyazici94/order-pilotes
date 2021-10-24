@@ -31,14 +31,7 @@ public class ClientService {
     }
 
     public Client findClientById (Long clientId) throws ApiException {
-        return clientRepository.findById(clientId).orElseThrow(()-> new ApiException("Client is not found"));
+        return clientRepository.findById(clientId).orElseThrow(()-> new ApiException("Client couldn't be found"));
     }
-
-    /*
-    public Client findClientOfTheOrderExists(Long clientId, Long orderId) throws ApiException{
-        return clientRepository.findByIdAndOrdersId(clientId, orderId)
-            .orElseThrow(()-> new ApiException("Client or order is not found"));
-    }
-     */
 
 }

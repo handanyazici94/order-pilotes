@@ -12,20 +12,17 @@ import org.springframework.security.config.annotation.authentication.builders.Au
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
-import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.factory.PasswordEncoderFactories;
 import org.springframework.security.crypto.password.PasswordEncoder;
-
 import javax.sql.DataSource;
 
 @Configuration
 @EnableWebSecurity
 public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
 
-   // @Qualifier("userService")
+    @Qualifier("userPrincipalDetailsService")
     @Autowired
     private UserPrincipalDetailsService userPrincipalDetailsService;
-   // private UserDetailsService userDetailsService;
 
     @Autowired
     private DataSource dataSource;
@@ -60,9 +57,10 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
             .authorizeRequests()
                 .antMatchers("/api/v1/client/**").permitAll()
                 .antMatchers("/api/v1/h2-console/**").permitAll()
-                .antMatchers(HttpMethod.POST, "/api/v1/order/**").permitAll()
-                .antMatchers(HttpMethod.PUT, "/api/v1/order/**").permitAll()
+                //.antMatchers(HttpMethod.POST, "/api/v1/order/**").permitAll()
+                //.antMatchers(HttpMethod.PUT, "/api/v1/order/**").permitAll()
                 .antMatchers(HttpMethod.GET, "/api/v1/order/**").hasRole(Role.ADMIN.toString())
+                .antMatchers(HttpMethod.GET, "/api/v1/orders").hasRole(Role.ADMIN.toString())
                 .and().csrf().ignoringAntMatchers("/h2-console/**")
             .and().headers().frameOptions().sameOrigin()
             .and()

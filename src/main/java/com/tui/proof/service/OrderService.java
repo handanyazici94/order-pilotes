@@ -37,8 +37,8 @@ public class OrderService {
     RabbitMqProducer rabbitMqProducer;
 
 
-    public OrderResponse createNewOrder (OrderRequest orderRequest, Client client) throws ApiException {
-        Address address = AddressMapper.mappingAddressDtoToAddress(orderRequest.getAddress());
+    public OrderResponse createNewOrder (OrderRequest orderRequest, Client client) {
+        Address address = AddressMapper.mappingAddressRequestToAddress(orderRequest.getAddress());
         address = addressRepository.save(address);
         Order order = OrderMapper.mappingFromOrderDtoToOrder(orderRequest, client, address);
         order = orderRepository.save(order);
@@ -49,32 +49,30 @@ public class OrderService {
         return OrderMapper.mappingFromOrderToOrderResponse(order);
     }
 
-    public OrderResponse updateOrder (Long orderId, Client client, OrderRequest orderRequest) throws ApiException {
+    public OrderResponse updateOrder (Order order, Client client, OrderRequest orderRequest) throws ApiException {
         Instant limitTime = Instant.now().minus(VALIDITY_TIME, ChronoUnit.MINUTES);
-        //this.findOrderById(orderId);
-        Order updateOrder = this.findOrderThatProcessTimeGreaterThanLimitTime(orderId, limitTime);
+        Order existingOrder = this.findOrderThatProcessTimeGreaterThanLimitTime(order.getId(), limitTime);
 
-        Address address = AddressMapper.mappingFromAddressDtoToExistAddress(orderRequest.getAddress(), updateOrder.getDeliveryAddress());
-        updateOrder.setPilotes(Integer.parseInt(orderRequest.getPilotes()));
-        updateOrder.setOrderTotal(orderRequest.getOrderTotal());
-        updateOrder.setDeliveryAddress(address);
-        updateOrder = orderRepository.save(updateOrder);
+        Address address = AddressMapper.mappingFromAddressRequestToExistAddress(orderRequest.getAddress(), existingOrder.getDeliveryAddress());
+        existingOrder = OrderMapper.mappingFromOrderRequestToExistOrder(orderRequest, order);
+        existingOrder.setDeliveryAddress(address);
+        existingOrder = orderRepository.save(existingOrder);
 
-        OrderNotification orderNotification = OrderMapper.mappingFromOrderToOrderNotification(updateOrder, address, client, OrderNotificationStatus.UPDATE);
+        OrderNotification orderNotification = OrderMapper.mappingFromOrderToOrderNotification(existingOrder, address, client, OrderNotificationStatus.UPDATE);
         rabbitMqProducer.sendOrder(orderNotification);
 
-        return OrderMapper.mappingFromOrderToOrderResponse(updateOrder);
+        return OrderMapper.mappingFromOrderToOrderResponse(existingOrder);
     }
 
     public Order findOrderThatProcessTimeGreaterThanLimitTime (Long orderId, Instant limitTime) throws ApiException {
        return orderRepository.findByIdAndProcessTimeGreaterThanEqual(orderId, limitTime)
-            .orElseThrow(()-> new ApiException("The order couldn't been changed anymore."));
+            .orElseThrow(()-> new ApiException("The order couldn't be changed anymore"));
     }
-/*
+
     public Order findOrderById (Long orderId) throws ApiException {
-        return orderRepository.findById(orderId).orElseThrow(()-> new ApiException("The order could not be found."));
+        return orderRepository.findById(orderId).orElseThrow(()-> new ApiException("The order couldn't be found"));
     }
-*/
+
     public List<OrderResponse> listAllOrder () {
         return orderRepository.findAll()
             .stream()
@@ -82,7 +80,7 @@ public class OrderService {
             .collect(Collectors.toList());
     }
 
-    public List<OrderResponse> searchOrderAsPartial(String partialSearch) throws ApiException {
+    public List<OrderResponse> searchOrderAsPartial(String partialSearch) {
 
         partialSearch = partialSearch.replace(" ", "");
         return orderRepository.findAllByInputString(partialSearch).stream()

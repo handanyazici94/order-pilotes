@@ -5,7 +5,7 @@ import com.tui.proof.model.entity.Address;
 
 public class AddressMapper {
 
-    public static Address mappingAddressDtoToAddress(AddressRequest addressRequest) {
+    public static Address mappingAddressRequestToAddress(AddressRequest addressRequest) {
         Address address = new Address();
         address.setCity(addressRequest.getCity());
         address.setCountry(addressRequest.getCountry());
@@ -14,7 +14,7 @@ public class AddressMapper {
 
         return address;
     }
-    public static Address mappingFromAddressDtoToExistAddress(AddressRequest addressRequest, Address address) {
+    public static Address mappingFromAddressRequestToExistAddress(AddressRequest addressRequest, Address address) {
         address.setCity(addressRequest.getCity());
         address.setCountry(addressRequest.getCountry());
         address.setStreet(addressRequest.getStreet());

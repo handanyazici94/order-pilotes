@@ -79,4 +79,10 @@ public class OrderMapper {
 
         return orderResponse;
     }
+    public static Order mappingFromOrderRequestToExistOrder(OrderRequest orderRequest, Order order) {
+        order.setPilotes(Integer.parseInt(orderRequest.getPilotes()));
+        order.setOrderTotal(orderRequest.getOrderTotal());
+
+        return order;
+    }
 }
