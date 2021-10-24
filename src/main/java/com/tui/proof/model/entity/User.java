@@ -4,6 +4,7 @@ import com.tui.proof.model.enm.Role;
 import lombok.Data;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotNull;
 
 
 @Data
@@ -15,8 +16,13 @@ public class User {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     @Column(unique = true)
+    @NotNull
     private String username;
+
+    @NotNull
     private String password;
+
+    @NotNull
     @Enumerated(EnumType.STRING)
     private Role role;
     

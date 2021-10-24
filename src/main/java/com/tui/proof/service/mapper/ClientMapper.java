@@ -1,18 +1,18 @@
 package com.tui.proof.service.mapper;
 
-import com.tui.proof.dto.ClientDto;
+import com.tui.proof.dto.ClientRequest;
 import com.tui.proof.dto.ClientResponse;
 import com.tui.proof.model.entity.Client;
 
 public class ClientMapper {
 
-    public static Client mappingFromClientDtoToClient(ClientDto clientDto) {
+    public static Client mappingFromClientDtoToClient(ClientRequest clientRequest) {
         Client client = new Client();
 
-        client.setFirstName(clientDto.getFirstName());
-        client.setLastName(clientDto.getLastName());
-        client.setTelephone(clientDto.getTelephone());
-        client.setEmail(clientDto.getEmail());
+        client.setFirstName(clientRequest.getFirstName());
+        client.setLastName(clientRequest.getLastName());
+        client.setTelephone(clientRequest.getTelephone());
+        client.setEmail(clientRequest.getEmail());
 
         return client;
     }

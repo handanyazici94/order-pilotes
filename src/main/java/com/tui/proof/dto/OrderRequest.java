@@ -8,7 +8,7 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
 
 @Data
-public class OrderDto {
+public class OrderRequest {
 
     @Pattern(regexp = "^|5|10|15$" , message = "Enter just 5,10 or 15 number of pilotes")
     @NotEmpty
@@ -19,5 +19,5 @@ public class OrderDto {
 
     @Valid
     @NotNull(message = "Please enter client information")
-    private AddressDto address;
+    private AddressRequest address;
 }

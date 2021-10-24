@@ -44,7 +44,6 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
         return provider;
     }
 
-
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
         auth.userDetailsService(userPrincipalDetailsService).passwordEncoder(passwordEncoder()).and()
@@ -53,16 +52,6 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
                 .dataSource(dataSource);
     }
 
-    /*
-    @Override
-    public void configure(AuthenticationManagerBuilder auth) throws Exception {
-
-        auth.inMemoryAuthentication()
-            .withUser("user").password("{noop}admin").authorities("USER")
-            .and()
-            .withUser("admin").password("{noop}admin").authorities("ADMIN");
-    }
-*/
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http
@@ -79,25 +68,5 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
             .and()
             .csrf().disable()
             .formLogin().disable();
-
-
-        /*
-
-        // Enable CORS and disable CSRF
-
-        // Set permissions on endpoints
-          http.authorizeRequests()
-        // Our public endpoints
-       // .antMatchers("/api/public/**").permitAll()
-          .antMatchers(HttpMethod.POST, "/api/v1/client/**").permitAll()
-          .antMatchers(HttpMethod.PUT, "/api/v1/order/client/**").permitAll()
-          .antMatchers(HttpMethod.POST, "/api/v1/order/client/**").permitAll()
-          .antMatchers(HttpMethod.GET, "/api/v1/order/list/**").permitAll();
-          //.and()
-          //.httpBasic();
-         // .antMatchers(HttpMethod.GET, "/api/v1/order/search").hasAuthority("ADMIN")
-        // Our private endpoints
-         // .anyRequest().authenticated();
-        */
     }
 }

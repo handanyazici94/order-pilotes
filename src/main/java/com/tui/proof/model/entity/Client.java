@@ -1,12 +1,9 @@
 package com.tui.proof.model.entity;
 
-import lombok.AllArgsConstructor;
 import lombok.Data;
-import lombok.NoArgsConstructor;
-
 import javax.persistence.*;
 import javax.validation.constraints.Email;
-import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 import java.util.Set;
 
 @Entity
@@ -18,17 +15,18 @@ public class Client {
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long id;
 
-  @NotBlank
+  @NotNull
   private String firstName;
 
-  @NotBlank
+  @NotNull
   private String lastName;
 
-  @NotBlank
+  @NotNull
   private String telephone;
 
   @Column(unique = true)
   @Email
+  @NotNull
   private String email;
 
   @OneToMany(cascade=CascadeType.ALL)

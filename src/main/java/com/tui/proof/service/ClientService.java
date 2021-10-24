@@ -2,7 +2,7 @@ package com.tui.proof.service;
 
 import com.tui.proof.dto.ClientResponse;
 import com.tui.proof.exception.ApiException;
-import com.tui.proof.dto.ClientDto;
+import com.tui.proof.dto.ClientRequest;
 import com.tui.proof.model.entity.Client;
 import com.tui.proof.repository.ClientRepository;
 import com.tui.proof.service.mapper.ClientMapper;
@@ -18,13 +18,13 @@ public class ClientService {
     @Autowired
     ClientRepository clientRepository;
 
-    public ClientResponse register (ClientDto clientDto) throws ApiException {
+    public ClientResponse add (ClientRequest clientRequest) throws ApiException {
 
-        Optional<Client> client = clientRepository.findByEmail(clientDto.getEmail());
+        Optional<Client> client = clientRepository.findByEmail(clientRequest.getEmail());
         if (client.isPresent()) {
             throw new ApiException("User already exists");
         }
-        Client newClient = ClientMapper.mappingFromClientDtoToClient(clientDto);
+        Client newClient = ClientMapper.mappingFromClientDtoToClient(clientRequest);
         newClient = clientRepository.save(newClient);
 
         return ClientMapper.mappingFromClientToClientResponse(newClient);
@@ -34,9 +34,11 @@ public class ClientService {
         return clientRepository.findById(clientId).orElseThrow(()-> new ApiException("Client is not found"));
     }
 
+    /*
     public Client findClientOfTheOrderExists(Long clientId, Long orderId) throws ApiException{
         return clientRepository.findByIdAndOrdersId(clientId, orderId)
             .orElseThrow(()-> new ApiException("Client or order is not found"));
     }
+     */
 
 }

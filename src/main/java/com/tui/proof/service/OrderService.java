@@ -1,6 +1,6 @@
 package com.tui.proof.service;
 
-import com.tui.proof.dto.OrderDto;
+import com.tui.proof.dto.OrderRequest;
 import com.tui.proof.dto.OrderResponse;
 import com.tui.proof.exception.ApiException;
 import com.tui.proof.model.entity.Address;
@@ -28,9 +28,6 @@ public class OrderService {
     ClientService clientService;
 
     @Autowired
-    AddressService addressService;
-
-    @Autowired
     AddressRepository addressRepository;
 
     @Autowired
@@ -40,11 +37,10 @@ public class OrderService {
     RabbitMqProducer rabbitMqProducer;
 
 
-    public OrderResponse createNewOrder (OrderDto orderDto, Long clientId) throws ApiException {
-        Client client = clientService.findClientById(clientId);
-        Address address = AddressMapper.mappingAddressDtoToAddress(orderDto.getAddress());
+    public OrderResponse createNewOrder (OrderRequest orderRequest, Client client) throws ApiException {
+        Address address = AddressMapper.mappingAddressDtoToAddress(orderRequest.getAddress());
         address = addressRepository.save(address);
-        Order order = OrderMapper.mappingFromOrderDtoToOrder(orderDto, client, address);
+        Order order = OrderMapper.mappingFromOrderDtoToOrder(orderRequest, client, address);
         order = orderRepository.save(order);
 
         OrderNotification orderNotification = OrderMapper.mappingFromOrderToOrderNotification(order, address, client, OrderNotificationStatus.PROCESS);
@@ -53,15 +49,14 @@ public class OrderService {
         return OrderMapper.mappingFromOrderToOrderResponse(order);
     }
 
-    public OrderResponse updateOrder (Long orderId, Long clientId, OrderDto orderDto) throws ApiException {
-        Client client = clientService.findClientOfTheOrderExists(clientId, orderId);
+    public OrderResponse updateOrder (Long orderId, Client client, OrderRequest orderRequest) throws ApiException {
         Instant limitTime = Instant.now().minus(VALIDITY_TIME, ChronoUnit.MINUTES);
         //this.findOrderById(orderId);
         Order updateOrder = this.findOrderThatProcessTimeGreaterThanLimitTime(orderId, limitTime);
 
-        Address address = AddressMapper.mappingFromAddressDtoToExistAddress(orderDto.getAddress(), updateOrder.getDeliveryAddress());
-        updateOrder.setPilotes(Integer.parseInt(orderDto.getPilotes()));
-        updateOrder.setOrderTotal(orderDto.getOrderTotal());
+        Address address = AddressMapper.mappingFromAddressDtoToExistAddress(orderRequest.getAddress(), updateOrder.getDeliveryAddress());
+        updateOrder.setPilotes(Integer.parseInt(orderRequest.getPilotes()));
+        updateOrder.setOrderTotal(orderRequest.getOrderTotal());
         updateOrder.setDeliveryAddress(address);
         updateOrder = orderRepository.save(updateOrder);
 
@@ -75,11 +70,11 @@ public class OrderService {
        return orderRepository.findByIdAndProcessTimeGreaterThanEqual(orderId, limitTime)
             .orElseThrow(()-> new ApiException("The order couldn't been changed anymore."));
     }
-
+/*
     public Order findOrderById (Long orderId) throws ApiException {
         return orderRepository.findById(orderId).orElseThrow(()-> new ApiException("The order could not be found."));
     }
-
+*/
     public List<OrderResponse> listAllOrder () {
         return orderRepository.findAll()
             .stream()

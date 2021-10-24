@@ -1,6 +1,6 @@
 package com.tui.proof.service;
 
-import com.tui.proof.dto.ClientDto;
+import com.tui.proof.dto.ClientRequest;
 import com.tui.proof.dto.ClientResponse;
 import com.tui.proof.exception.ApiException;
 import com.tui.proof.model.entity.Client;
@@ -30,7 +30,7 @@ public class ClientServiceTest {
     private ClientService clientService;
 
     private Client client;
-    private ClientDto clientDto;
+    private ClientRequest clientRequest;
     private final Long clientId = 1L;
     private final Long orderId = 1L;
 
@@ -43,11 +43,11 @@ public class ClientServiceTest {
         client.setFirstName("Handan");
         client.setLastName("Yayla");
 
-        clientDto = new ClientDto();
-        clientDto.setTelephone("05323452347");
-        clientDto.setEmail("hyayla@gmail.com");
-        clientDto.setFirstName("Handan");
-        clientDto.setLastName("Yayla");
+        clientRequest = new ClientRequest();
+        clientRequest.setTelephone("05323452347");
+        clientRequest.setEmail("hyayla@gmail.com");
+        clientRequest.setFirstName("Handan");
+        clientRequest.setLastName("Yayla");
     }
 
     @AfterEach
@@ -56,65 +56,30 @@ public class ClientServiceTest {
     }
 
     @Test
-    @DisplayName("register_existClientDto_returnUserAlreadyExistsException")
-    public void register_existClientDto_returnClientResponse() {
+    @DisplayName("add_existClientDto_returnUserAlreadyExistsException")
+    public void add_existClientDto_returnClientResponse() {
         when(clientRepository.findByEmail(any(String.class))).thenReturn(Optional.of(client));
 
         ApiException actualException = assertThrows(ApiException.class, () -> {
-            clientService.register(clientDto);
+            clientService.add(clientRequest);
         });
 
         assertEquals("User already exists", actualException.getMessage());
     }
 
     @Test
-    @DisplayName("register_notExistClientDto_returnClientResponse")
-    public void register_notExistClientDto_returnClientResponse() throws ApiException {
+    @DisplayName("add_notExistClientDto_returnClientResponse")
+    public void add_notExistClientDto_returnClientResponse() throws ApiException {
         when(clientRepository.findByEmail(any(String.class))).thenReturn(Optional.empty());
         when(clientRepository.save(any(Client.class))).thenReturn(client);
 
-        ClientResponse actualClientResponse = clientService.register(clientDto);
+        ClientResponse actualClientResponse = clientService.add(clientRequest);
 
         assertEquals(client.getId(), actualClientResponse.getId());
         assertEquals(client.getEmail(), actualClientResponse.getEmail());
         assertEquals(client.getFirstName(), actualClientResponse.getFirstName());
         assertEquals(client.getLastName(), actualClientResponse.getLastName());
         assertEquals(client.getTelephone(), actualClientResponse.getTelephone());
-    }
-
-/*
-    @Test
-    @DisplayName("checkClientByEmail_existEmail_returnUserAlreadyExistsException")
-    public void checkClientByEmail_existEmail_returnUserAlreadyExistsException() {
-        when(clientRepository.findByEmail(any(String.class))).thenReturn(Optional.of(client));
-
-        ApiException exception = assertThrows(ApiException.class, () -> {
-            clientService.checkClientByEmail(clientDto.getEmail());
-        });
-
-        assertEquals(exception.getMessage(), "User already exists");
-    }
-*/
-    @Test
-    @DisplayName("findClientOfTheOrderExists_validClientIdAndOrderId_returnClient")
-    public void findClientOfTheOrderExists_validClientIdAndOrderId_returnClient() throws ApiException {
-        when(clientRepository.findByIdAndOrdersId(any(Long.class),any(Long.class))).thenReturn(Optional.of(client));
-
-        Client actualClient = clientService.findClientOfTheOrderExists(clientId, orderId);
-
-        assertSame(client, actualClient);
-    }
-
-    @Test
-    @DisplayName("findClientOfTheOrderExists_validClientIdAndInvalidOrderId_returnClientOrOrderIsNotFoundException")
-    public void findClientOfTheOrderExists_validClientIdAndInvalidOrderId_returnClientOrOrderIsNotFoundException() {
-        when(clientRepository.findByIdAndOrdersId(any(Long.class),any(Long.class))).thenReturn(Optional.empty());
-
-        ApiException actualException = assertThrows(ApiException.class, () -> {
-            clientService.findClientOfTheOrderExists(clientId, orderId);
-        });
-
-        assertEquals("Client or order is not found", actualException.getMessage());
     }
 
     @Test

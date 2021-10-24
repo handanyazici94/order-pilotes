@@ -16,9 +16,13 @@ public class Order {
   private Long id;
 
   @Column(unique = true)
+  @NotNull
   private String number;
+  @NotNull
   private int pilotes;
+  @NotNull
   private double orderTotal;
+  @NotNull
   private Instant processTime;
 
   @NotNull

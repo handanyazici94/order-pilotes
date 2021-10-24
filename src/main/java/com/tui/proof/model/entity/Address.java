@@ -2,7 +2,7 @@ package com.tui.proof.model.entity;
 
 import lombok.Data;
 import javax.persistence.*;
-import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 
 
 @Entity
@@ -14,16 +14,16 @@ public class Address {
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long id;
 
-  @NotBlank
+  @NotNull
   private String street;
 
-  @NotBlank
+  @NotNull
   private String postcode;
 
-  @NotBlank
+  @NotNull
   private String city;
 
-  @NotBlank
+  @NotNull
   private String country;
 
 }

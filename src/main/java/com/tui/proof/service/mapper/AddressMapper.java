@@ -1,24 +1,24 @@
 package com.tui.proof.service.mapper;
 
-import com.tui.proof.dto.AddressDto;
+import com.tui.proof.dto.AddressRequest;
 import com.tui.proof.model.entity.Address;
 
 public class AddressMapper {
 
-    public static Address mappingAddressDtoToAddress(AddressDto addressDto) {
+    public static Address mappingAddressDtoToAddress(AddressRequest addressRequest) {
         Address address = new Address();
-        address.setCity(addressDto.getCity());
-        address.setCountry(addressDto.getCountry());
-        address.setStreet(addressDto.getStreet());
-        address.setPostcode(addressDto.getPostcode());
+        address.setCity(addressRequest.getCity());
+        address.setCountry(addressRequest.getCountry());
+        address.setStreet(addressRequest.getStreet());
+        address.setPostcode(addressRequest.getPostcode());
 
         return address;
     }
-    public static Address mappingFromAddressDtoToExistAddress(AddressDto addressDto, Address address) {
-        address.setCity(addressDto.getCity());
-        address.setCountry(addressDto.getCountry());
-        address.setStreet(addressDto.getStreet());
-        address.setPostcode(addressDto.getPostcode());
+    public static Address mappingFromAddressDtoToExistAddress(AddressRequest addressRequest, Address address) {
+        address.setCity(addressRequest.getCity());
+        address.setCountry(addressRequest.getCountry());
+        address.setStreet(addressRequest.getStreet());
+        address.setPostcode(addressRequest.getPostcode());
 
         return address;
     }

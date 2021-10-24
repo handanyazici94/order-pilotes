@@ -1,8 +1,8 @@
 package com.tui.proof.service;
 
 
-import com.tui.proof.dto.AddressDto;
-import com.tui.proof.dto.OrderDto;
+import com.tui.proof.dto.AddressRequest;
+import com.tui.proof.dto.OrderRequest;
 import com.tui.proof.dto.OrderResponse;
 import com.tui.proof.exception.ApiException;
 import com.tui.proof.model.entity.Address;
@@ -21,6 +21,7 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import java.time.Instant;
+import java.util.List;
 import java.util.Optional;
 
 import static org.mockito.ArgumentMatchers.any;
@@ -38,9 +39,6 @@ public class OrderServiceTest {
     private ClientService clientService;
 
     @MockBean
-    private AddressService addressService;
-
-    @MockBean
     private AddressRepository addressRepository;
 
     @MockBean
@@ -50,8 +48,8 @@ public class OrderServiceTest {
     private OrderService orderService;
 
     private Order order;
-    private OrderDto orderDto;
-    private AddressDto addressDto;
+    private OrderRequest orderRequest;
+    private AddressRequest addressRequest;
     private Address address;
     private Client client;
 
@@ -63,16 +61,16 @@ public class OrderServiceTest {
 
     @BeforeEach
     void createClient() {
-        orderDto = new OrderDto();
-        orderDto.setPilotes("5");
-        orderDto.setOrderTotal(34.6);
+        orderRequest = new OrderRequest();
+        orderRequest.setPilotes("5");
+        orderRequest.setOrderTotal(34.6);
 
-        addressDto = new AddressDto();
-        addressDto.setCity("ankara");
-        addressDto.setCountry("turkey");
-        addressDto.setStreet("izmir street");
-        addressDto.setPostcode("060018");
-        orderDto.setAddress(addressDto);
+        addressRequest = new AddressRequest();
+        addressRequest.setCity("ankara");
+        addressRequest.setCountry("turkey");
+        addressRequest.setStreet("izmir street");
+        addressRequest.setPostcode("060018");
+        orderRequest.setAddress(addressRequest);
 
         // -----
         address = new Address();
@@ -100,14 +98,12 @@ public class OrderServiceTest {
 
 
     @Test
-    @DisplayName("createNewOrder_validClientIdAndOrderDto_returnOrderResponse")
-    public void createNewOrder_validClientIdAndOrderDto_returnOrderResponse() throws ApiException {
-
-        when(clientService.findClientById(clientId)).thenReturn(client);
+    @DisplayName("createNewOrder_validOrderRequest_returnOrderResponse")
+    public void createNewOrder_validOrderRequest_returnOrderResponse() throws ApiException {
         when(addressRepository.save(any(Address.class))).thenReturn(address);
         when(orderRepository.save(any(Order.class))).thenReturn(order);
 
-        OrderResponse actualOrderResponse = orderService.createNewOrder(orderDto, clientId);
+        OrderResponse actualOrderResponse = orderService.createNewOrder(orderRequest, client);
 
         assertEquals(order.getId(), actualOrderResponse.getId());
         assertEquals(order.getPilotes(), actualOrderResponse.getPilotes());
@@ -117,18 +113,30 @@ public class OrderServiceTest {
         assertEquals(order.getDeliveryAddress().getPostcode(), actualOrderResponse.getAddress().getPostcode());
         assertEquals(order.getDeliveryAddress().getStreet(), actualOrderResponse.getAddress().getStreet());
     }
-
+/*
     @Test
     @DisplayName("createNewOrder_validClientIdAndOrderId_returnOrderResponse")
     public void createNewOrder_inValidClientId_returnClientIsNotFoundException() throws ApiException {
-        when(clientService.findClientById(clientId)).thenThrow(new ApiException("Client is not found"));
+        //when(clientService.findClientById(clientId)).thenThrow(new ApiException("Client is not found"));
 
         ApiException actualException = assertThrows(ApiException.class, () -> {
-            orderService.createNewOrder(orderDto, clientId);
+            orderService.createNewOrder(orderRequest, client);
         });
         assertEquals("Client is not found", actualException.getMessage());
 
         //verify(eventPublisher, never()).fireEvent(any());
+    }
+*/
+    @Test
+    @DisplayName("listAllOrder_returnList")
+    public void listAllOrder_returnList() {
+        //when(orderRepository.findAll()).thenReturn(List);
+    }
+
+    @Test
+    @DisplayName("searchOrderAsPartial_validPartialString_returnOrderResponse")
+    public void searchOrderAsPartial_validPartialString_returnOrderResponse() {
+
     }
 
     @Test

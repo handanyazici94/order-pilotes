@@ -11,8 +11,6 @@ import java.util.Optional;
 
 @Repository
 public interface OrderRepository extends JpaRepository<Order, Long>  {
-    List<Order> findByClient(Client client);
-    Optional<Order> findByIdAndProcessTimeGreaterThanEqual(Long orderId, Instant limitTime);
 
     @Query(value = "SELECT o FROM Order as o WHERE " +
             "(:inputString is null or lower(concat(o.client.firstName,o.client.lastName )) like lower(concat('%', :inputString,'%'))) or " +
@@ -24,5 +22,6 @@ public interface OrderRepository extends JpaRepository<Order, Long>  {
             "(:inputString is null or lower(o.deliveryAddress.street) like lower(concat('%', :inputString,'%')))"
     )
     List<Order> findAllByInputString(String inputString);
+    Optional<Order> findByIdAndProcessTimeGreaterThanEqual(Long orderId, Instant limitTime);
 
 }

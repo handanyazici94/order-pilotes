@@ -21,7 +21,7 @@ Maven
 Docker
 ```
 
-### Installing
+### Run and Build
 After installing necessary library, you can run the project on Command Line. 
 docker-compose.yml file is responsible for running rabbitmq and spring boot project.
 
@@ -29,7 +29,7 @@ docker-compose.yml file is responsible for running rabbitmq and spring boot proj
 ```
 maven clean package
 ```
-###### Create containers and run the project as detached mode:
+###### Create images and containers and run the project as detached mode:
 ```
 docker-compose up -d 
 ```
@@ -37,11 +37,14 @@ docker-compose up -d
 ```
 docker-compose stop 
 ```
-###### Stop and delete images and containers :
+###### Stop and delete containers :
 ```
 docker-compose down 
 ```
-
+If you want to run the project with any IDE, you must run Rabbitmq service using docker-compose.yml file.
+```
+docker-compose up -d <service_name> 
+```
 ### Project Information
 ##### Admin username and password
 ```
@@ -54,14 +57,26 @@ http://localhost:8080/api/v1
 ```
 
 ##### H2 console:
+###### You can see data 
 ```
 http://localhost:8080/api/v1/h2-console
 ```
 
 ##### RabbitMQ:
+###### You can see create and update order notifications in Queues tab
 ```
 http://localhost:15672
 ```
+
+### REST API ENDPOINT
+```
+POST /client/
+POST /client/{clientId}/order
+PUT  /client/{clientId}/order/{orderId}
+GET  /order/{partial}
+GET  /orders
+```
+
 
 
 

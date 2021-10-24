@@ -6,7 +6,7 @@ import javax.validation.constraints.Email;
 import javax.validation.constraints.NotEmpty;
 
 @Data
-public class ClientDto {
+public class ClientRequest {
 
     @NotEmpty(message = "Please provide a firstName")
     private String firstName;

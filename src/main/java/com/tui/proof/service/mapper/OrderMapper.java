@@ -14,14 +14,14 @@ import java.time.Instant;
 
 public class OrderMapper {
 
-    public static Order mappingFromOrderDtoToOrder(OrderDto orderDto, Client client, Address address) {
+    public static Order mappingFromOrderDtoToOrder(OrderRequest orderRequest, Client client, Address address) {
         Order order = new Order();
 
         order.setClient(client);
         order.setDeliveryAddress(address);
-        order.setPilotes(Integer.parseInt(orderDto.getPilotes()));
-        order.setOrderTotal(orderDto.getOrderTotal());
-        order.setNumber(UUID.randomUUID().toString()); // create generate OrderNumber
+        order.setPilotes(Integer.parseInt(orderRequest.getPilotes()));
+        order.setOrderTotal(orderRequest.getOrderTotal());
+        order.setNumber(UUID.randomUUID().toString());
         order.setProcessTime(Instant.now());
 
         return order;
@@ -62,20 +62,20 @@ public class OrderMapper {
         orderResponse.setProcessTime(order.getProcessTime());
 
         Address address = order.getDeliveryAddress();
-        AddressDto addressDto = new AddressDto();
-        addressDto.setCity(address.getCity());
-        addressDto.setPostcode(address.getPostcode());
-        addressDto.setCountry(address.getCountry());
-        addressDto.setStreet(address.getStreet());
-        orderResponse.setAddress(addressDto);
+        AddressRequest addressRequest = new AddressRequest();
+        addressRequest.setCity(address.getCity());
+        addressRequest.setPostcode(address.getPostcode());
+        addressRequest.setCountry(address.getCountry());
+        addressRequest.setStreet(address.getStreet());
+        orderResponse.setAddress(addressRequest);
 
-        ClientDto clientDto = new ClientDto();
+        ClientRequest clientRequest = new ClientRequest();
         Client client = order.getClient();
-        clientDto.setEmail(client.getEmail());
-        clientDto.setTelephone(client.getTelephone());
-        clientDto.setFirstName(client.getFirstName());
-        clientDto.setLastName(client.getLastName());
-        orderResponse.setClient(clientDto);
+        clientRequest.setEmail(client.getEmail());
+        clientRequest.setTelephone(client.getTelephone());
+        clientRequest.setFirstName(client.getFirstName());
+        clientRequest.setLastName(client.getLastName());
+        orderResponse.setClient(clientRequest);
 
         return orderResponse;
     }

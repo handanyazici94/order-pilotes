@@ -5,7 +5,7 @@ import lombok.Data;
 import javax.validation.constraints.NotEmpty;
 
 @Data
-public class AddressDto {
+public class AddressRequest {
 
     @NotEmpty(message = "Please provide an street")
     private String street;
